@@ -1,43 +1,40 @@
-import {useState} from 'react';
+import React from 'react';
+// import ReactDOM from "react-dom";
 import FeedbackOptions from './FeedbackOptions/FeedbackOptions';
 import Section from './Section/Section';
 import Statistics from './Statistics/Statistics';
 import Notification from './Notification/Notification';
 
- export default function App() {
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-   
+class App extends React.Component {
+  state = {
+    good: 0,
+    neutral: 0,
+    bad: 0,
+  };
 
-   const options = ['good', 'neutral', 'bad']
-   
-   const onFeedback = (option) => {
-    switch (option) {
-      case 'good':
-        setGood(good + 1)
-        break;
-       case 'neutral':
-        setNeutral(neutral + 1)
-        break;
-       case 'bad':
-        setBad(bad + 1)
-        break;
-    
-      default:
-        break;
-    }
-
-   }
-   
-  const countTotalFeedback = () =>{
+  countTotalFeedback() {
+    const { good, neutral, bad } = this.state
     let total = good + neutral + bad
     return total
   };
 
- const countPositiveFeedbackPercentage = () => Math.round((good / countTotalFeedback()) * 100)
+  countPositiveFeedbackPercentage() {
+    const { good } = this.state
+    return  Math.round((good / this.countTotalFeedback()) * 100)
+  };
   
+  feedback = state => {
+    return Object.keys(state);
+  };
 
+  onFeedback = value => {
+    this.setState(prevState => ({
+      [value]: prevState[value] + 1,
+    }));
+  };
+
+  render() {
+    const { good, neutral, bad } = this.state;
     return (
       <div style={{
           display: "flex",
@@ -47,8 +44,8 @@ import Notification from './Notification/Notification';
         }}>
         <Section title={'Please leave feedback'}>
           <FeedbackOptions
-            options={options}
-            onFeedback={onFeedback}
+            children={this.feedback(this.state)}
+            onFeedback={this.onFeedback}
           />
         </Section>
         <Section title="Statistics">
@@ -59,12 +56,14 @@ import Notification from './Notification/Notification';
               good={good}
               neutral={neutral}
               bad={bad}
-              total={countTotalFeedback()}
-              percentage={countPositiveFeedbackPercentage()}
+              total={this.countTotalFeedback()}
+              percentage={this.countPositiveFeedbackPercentage()}
             />
           )}
         </Section>
       </div>
     );
   };
+};
 
+export default App;

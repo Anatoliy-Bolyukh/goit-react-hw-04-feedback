@@ -1,19 +1,19 @@
 import PropTypes from 'prop-types';
 
-const FeedbackOptions = ({ children, onFeedback }) => {
+const FeedbackOptions = ({ options, onFeedback }) => {
   return (
     <>
-      {children.map(child => {
+      {options.map(option => {
         return (
           <button
             onClick={() => {
-              onFeedback(child);
+              onFeedback(option);
             }}
             type="button"
-            name={child}
-            key={child}
+            name={option}
+            key={option}
           >
-            {child}
+            {option}
           </button>
         );
       })}
@@ -22,7 +22,7 @@ const FeedbackOptions = ({ children, onFeedback }) => {
 };
 
 FeedbackOptions.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.string),
+  options: PropTypes.arrayOf(PropTypes.string),
   onFeedback: PropTypes.func,
 };
 
